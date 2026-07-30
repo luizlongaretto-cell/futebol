@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Mini Jogo de Futebol</title>
+<style>
+body{
+    margin:0;
+    background:#222;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:Arial;
+}
+
+canvas{
+    background:#2d8f3c;
+    border:5px solid white;
+}
+</style>
+</head>
+<body>
+
+<canvas id="game" width="900" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const player = {
+    x:150,
+    y:250,
+    r:20,
+    speed:4,
+    color:"blue"
+};
+
+const ball = {
+    x:450,
+    y:250,
+    r:12,
+    vx:0,
+    vy:0
+};
+
+const goal = {
+    x:860,
+    y:180,
+    w:40,
+    h:140
+};
+
+let score = 0;
+const keys = {};
+
+document.addEventListener("keydown", e => keys[e.key]=true);
+document.addEventListener("keyup", e => keys[e.key]=false);
+
+function movePlayer(){
+
+    if(keys["ArrowUp"]) player.y -= player.speed;
+    if(keys["ArrowDown"]) player.y += player.speed;
+    if(keys["ArrowLeft"]) player.x -= player.speed;
+    if(keys["ArrowRight"]) player.x += player.speed;
+
+    player.x=Math.max(player.r,Math.min(canvas.width-player.r,player.x));
+    player.y=Math.max(player.r,Math.min(canvas.height-player.r,player.y));
+}
+
+function updateBall(){
+
+    let dx = ball.x-player.x;
+    let dy = ball.y-player.y;
+    let dist = Math.sqrt(dx*dx+dy*dy);
+
+    if(dist < player.r+ball.r){
+
+        let angle = Math.atan2(dy,dx);
+        ball.vx = Math.cos(angle)*6;
+        ball.vy = Math.sin(angle)*6;
+    }
+
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    ball.vx *= 0.98;
+    ball.vy *= 0.98;
+
+    if(ball.x-ball.r<0){
+        ball.x=ball.r;
+        ball.vx*=-1;
+    }
+
+    if(ball.y-ball.r<0){
+        ball.y=ball.r;
+        ball.vy*=-1;
+    }
+
+    if(ball.y+ball.r>canvas.height){
+        ball.y=canvas.height-ball.r;
+        ball.vy*=-1;
+    }
+
+    if(ball.x+ball.r>canvas.width){
+
+        if(ball.y>goal.y && ball.y<goal.y+goal.h){
+            score++;
+            alert("GOOOOL!! Placar: "+score);
+
+            player.x=150;
+            player.y=250;
+
+            ball.x=450;
+            ball.y=250;
+            ball.vx=0;
+            ball.vy=0;
+        }else{
+            ball.x=canvas.width-ball.r;
+            ball.vx*=-1;
+        }
+    }
+}
+
+function drawField(){
+
+    ctx.fillStyle="#2d8f3c";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.strokeStyle="white";
+    ctx.lineWidth=4;
+
+    ctx.strokeRect(0,0,canvas.width,canvas.height);
+
+    ctx.beginPath();
+    ctx.arc(canvas.width/2,canvas.height/2,70,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width/2,0);
+    ctx.lineTo(canvas.width/2,canvas.height);
+    ctx.stroke();
+
+    ctx.fillStyle="red";
+    ctx.fillRect(goal.x,goal.y,goal.w,goal.h);
+}
+
+function draw(){
+
+    drawField();
+
+    ctx.fillStyle=player.color;
+    ctx.beginPath();
+    ctx.arc(player.x,player.y,player.r,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="white";
+    ctx.beginPath();
+    ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="yellow";
+    ctx.font="24px Arial";
+    ctx.fillText("Gols: "+score,20,35);
+}
+
+function gameLoop(){
+
+    movePlayer();
+    updateBall();
+    draw();
+
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+
+</body>
+</html>
