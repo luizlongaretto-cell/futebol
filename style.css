@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Campo de Futebol</title>
+
+<style>
+body{
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#222;
+}
+
+.campo{
+    width:900px;
+    height:500px;
+    background:#2e8b57;
+    border:5px solid white;
+    position:relative;
+    overflow:hidden;
+}
+
+.linha-centro{
+    position:absolute;
+    left:50%;
+    top:0;
+    width:4px;
+    height:100%;
+    background:white;
+    transform:translateX(-50%);
+}
+
+.circulo{
+    position:absolute;
+    width:140px;
+    height:140px;
+    border:4px solid white;
+    border-radius:50%;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+}
+
+.area-esquerda,
+.area-direita{
+    position:absolute;
+    width:120px;
+    height:220px;
+    border:4px solid white;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.area-esquerda{
+    left:0;
+}
+
+.area-direita{
+    right:0;
+}
+
+.gol-esquerdo,
+.gol-direito{
+    position:absolute;
+    width:20px;
+    height:120px;
+    background:white;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.gol-esquerdo{
+    left:0;
+}
+
+.gol-direito{
+    right:0;
+}
+
+.bola{
+    width:24px;
+    height:24px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    animation:girar 2s linear infinite;
+}
+
+@keyframes girar{
+    from{
+        transform:translate(-50%,-50%) rotate(0deg);
+    }
+    to{
+        transform:translate(-50%,-50%) rotate(360deg);
+    }
+}
+</style>
+
+</head>
+<body>
+
+<div class="campo">
+
+    <div class="linha-centro"></div>
+    <div class="circulo"></div>
+
+    <div class="area-esquerda"></div>
+    <div class="area-direita"></div>
+
+    <div class="gol-esquerdo"></div>
+    <div class="gol-direito"></div>
+
+    <div class="bola"></div>
+
+</div>
+
+</body>
+</html>
